@@ -6,19 +6,20 @@ namespace EventsTask
     {
         static void Main(string[] args)
         {
-            var encoder = new MyComplexEncoder();
+            var videoEncoder = new VideoEncoder();
+
             var telegramService = new TelegramService();
             var emailService = new EmailService();
 
-            var videoEncoder = new VideoEncoder();
-            videoEncoder.AddNotificationSource(telegramService);
-            videoEncoder.AddNotificationSource(emailService);
+            var notificationSender = new NotificationSender();
+            notificationSender.Subscribe(emailService);
+            notificationSender.Subscribe(telegramService);
 
-            encoder.Preparing += videoEncoder.PreparingEncoding;
-            encoder.Starting += videoEncoder.StartedEncoding;
-            encoder.Finished += videoEncoder.FinishedEncoding;
+            videoEncoder.Preparing += (sender, eventArgs) => Console.WriteLine("Preparing");
+            videoEncoder.Starting += (sender, eventArgs) => Console.WriteLine("Starting");
+            videoEncoder.Finished += (sender, eventArgs) => notificationSender.Notify();
 
-            encoder.Encode(new byte[] { 1, 3});
+            videoEncoder.Encode(new byte[] { 1, 3});
         }
     }
 }

@@ -6,43 +6,34 @@ using System.Threading.Tasks;
 
 namespace EventsTask
 {
-    public class VideoEncoder
+    public class VideoEncoder : IEncoder
     {
-        private readonly List<INotificationService> _notificationServices;
+        public event EventHandler Preparing;
+        public event EventHandler Starting;
+        public event EventHandler Finished;
 
-        public VideoEncoder()
+        protected void OnPreparing()
         {
-            _notificationServices = new List<INotificationService>();
+            Preparing?.Invoke(this, EventArgs.Empty);
         }
 
-        public void PreparingEncoding(object source, EventArgs args)
+        protected void OnStarted()
         {
-            Console.WriteLine("Preparing encoding");
+            Starting?.Invoke(this, EventArgs.Empty);
         }
 
-        public void StartedEncoding(object source, EventArgs args)
+        protected void OnFinished()
         {
-            Console.WriteLine("Started encoding");
+            Finished?.Invoke(this, EventArgs.Empty);
         }
 
-        public void FinishedEncoding(object source, EventArgs args)
+        public void Encode(byte[] source)
         {
-            Console.WriteLine("Finished encoding");
+            OnPreparing();
 
-            Notify();
-        }
+            OnStarted();
 
-        public void AddNotificationSource(INotificationService notificationService)
-        {
-            _notificationServices.Add(notificationService);
-        }
-
-        public void Notify()
-        {
-            foreach (var notification in _notificationServices)
-            {
-                notification.Send("Video is encoded");
-            }
+            OnFinished();
         }
     }
 }
