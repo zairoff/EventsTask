@@ -18,7 +18,7 @@ namespace EventsTask
             encoder.Starting += videoEncoder.StartedEncoding;
             encoder.Finished += videoEncoder.FinishedEncoding;
 
-            encoder.Encode(null);
+            encoder.Encode(new byte[] { 1, 3});
         }
     }
 }

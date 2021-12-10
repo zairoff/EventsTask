@@ -14,24 +14,24 @@ namespace EventsTask
 
         public void Encode(byte[] source)
         {
-            OnPreparing();
+            OnPreparing(source);
 
-            OnStarted();
+            OnStarted(source);
 
-            OnFinished();
+            OnFinished(source);
         }
 
-        protected void OnPreparing()
+        protected void OnPreparing(object source)
         {
-            Preparing?.Invoke(this, EventArgs.Empty);
+            Preparing?.Invoke(source, EventArgs.Empty);
         }
 
-        protected void OnStarted()
+        protected void OnStarted(object source)
         {
             Starting?.Invoke(this, EventArgs.Empty);
         }
 
-        protected void OnFinished()
+        protected void OnFinished(object source)
         {
             Finished?.Invoke(this, EventArgs.Empty);
         }
